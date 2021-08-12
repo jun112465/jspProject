@@ -175,18 +175,23 @@
 					</thead>
 					<tbody>
 
-					<c:forEach var="n" items="${list}">
+					<%
+						List<Notice> list = (List<Notice>) request.getAttribute("list");
+						for(int i=0; i<list.size(); i++){
+							Notice n = list.get(i);
+							request.setAttribute("n", n);
+					%>
 						<tr>
 							<td>${n.id}</td>
-							<td class="title indent text-align-left"><a href="detail?id=${n.id}">${n.title}</a></td>
-							<td>${n.author}</td>
+							<td class="title indent text-align-left"><a href="detail?id=<%=n.getId()%>"><%=n.getTitle()%></a></td>
+							<td><%=n.getAuthor()%></td>
 							<td>
-									${n.date}
+									<%=n.getDate()%>
 							</td>
-							<td>${n.views}</td>
+							<td><%=n.getViews()%></td>
 						</tr>
-					</c:forEach>
 
+					<% } %>
 					</tbody>
 
 				</table>
@@ -194,7 +199,7 @@
 
 			<div class="indexer margin-top align-right">
 				<h3 class="hidden">현재 페이지</h3>
-				<div><span class="text-orange text-strong">${requestScope.page.current}</span> / ${requestScope.page.totalPage} pages</div>
+				<div><span class="text-orange text-strong"></span> / ${totalPage} pages</div>
 			</div>
 			<div class="margin-top align-center pager">
 
@@ -205,10 +210,8 @@
 
 	</div>
 	<ul class="-list- center">
-		<% Page p = (Page) request.getAttribute("page"); %>
-		<% for(int i=0; i<p.getEnd(); i++) { %>
-		<li><a class="-text- orange bold" href="?p=<%=i+1%>&t=&q=" ><%=i+1%></a></li>
-		<% } %>
+
+		<li><a class="-text- orange bold" href="?p=&t=&q=" ></a></li>
 	</ul>
 	<div>
 
