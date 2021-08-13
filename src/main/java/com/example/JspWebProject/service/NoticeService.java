@@ -1,31 +1,38 @@
 package com.example.JspWebProject.service;
 
-import com.example.JspWebProject.web.Notice;
-import com.example.JspWebProject.web.Page;
+import com.example.JspWebProject.entity.Notice;
+import com.example.JspWebProject.entity.NoticeView;
 
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 import static java.sql.DriverManager.*;
 
 public class NoticeService {
 
-    public List<Notice> getNoticeList(){
+    public List<NoticeView> getNoticeList(){
         return getNoticeList(null, null, 1);
     }
-    public List<Notice> getNoticeList(int page){
+    public List<NoticeView> getNoticeList(int page){
         return getNoticeList(null, null, page);
     }
-    public List<Notice> getNoticeList(String field, String query, int page) {
-
-        List<Notice> noticeList = new ArrayList<>();
+    public List<NoticeView> getNoticeList(String field, String query, int page) {
 
         int startRowNumber = (page-1)*10+1;
         int endRowNumber = startRowNumber+9;
-        String sql = "select * from (select Notice.*, @rownum:=@rownum+1 as rownum from JdbcTutorial.Notice, (select @rownum:=0) as tmp order by date desc, id desc) as t1 where rownum between "+startRowNumber+" and "+endRowNumber;
 
+        List<NoticeView> noticeList = new ArrayList<>();
+        String sql;
+        if(field=="" && query=="")
+            sql = "select * from (select noticeview.*, @rownum:=@rownum+1 as rownum from noticeview, (select @rownum:=0) as tmp order by date desc, id desc) as t1 where rownum between "+startRowNumber+" and "+endRowNumber;
+        else
+            sql= "select * from (\n" +
+                    "                  select @rownum := @rownum + 1 as rownum, tmp1.*\n" +
+                    "                  from (select * from noticeview where " + field + " like '%" + query + "%') as tmp1,\n" +
+                    "                       (select @rownum:=0) as tmp2\n" +
+                    "                  order by date desc, id desc\n" +
+                    ") as t1 where rownum between " + startRowNumber + " and " + endRowNumber;
         //db 세팅
         Connection con = null;
         PreparedStatement st = null;
@@ -50,8 +57,8 @@ public class NoticeService {
                 String author = rs.getString("author");
                 int views = rs.getInt("views");
                 Date date = rs.getDate("date");
-                String description = rs.getString("description");
-                Notice notice = new Notice(id,title,author,views,date, description);
+                int cmtCount = rs.getInt("cnt");
+                NoticeView notice = new NoticeView(id,title,author,views,date,cmtCount);
 
                 System.out.println(notice.toString());
                 noticeList.add(notice);
@@ -76,7 +83,13 @@ public class NoticeService {
     }
     public int getNoticeCount(String field, String query){
 
-        String sql = "select count(*) as cnt from JdbcTutorial.Notice";
+        String sql;
+        if(field=="" && query=="")
+            sql = "select count(*) as cnt from JdbcTutorial.Notice";
+        else
+            sql = "select count(*) as cnt from (\n" +
+                    "    select * from JdbcTutorial.Notice where " + field + " like '%" + query + "%'\n" +
+                    ") as tmp;";
         int noticeCount = 1;
         //db 세팅
         Connection con = null;

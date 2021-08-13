@@ -1,8 +1,8 @@
 package com.example.JspWebProject.controller;
 
+import com.example.JspWebProject.entity.NoticeView;
 import com.example.JspWebProject.service.NoticeService;
-import com.example.JspWebProject.web.Notice;
-import com.example.JspWebProject.web.Page;
+import com.example.JspWebProject.entity.Notice;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -10,8 +10,6 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.sql.*;
-import java.sql.Date;
 import java.util.*;
 
 @WebServlet("/notice/list")
@@ -19,11 +17,19 @@ public class NoticeListController extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 
+        Optional<String> _field = Optional.ofNullable(req.getParameter("f"));
+        String field = _field.orElse("");
+        Optional<String> _query = Optional.ofNullable(req.getParameter("q"));
+        String query = _query.orElse("");
+        Optional<String> _page = Optional.ofNullable(req.getParameter("p"));
+        int page = Integer.parseInt(_page.orElse("1"));
+        req.setAttribute("curPage", page);
+
         NoticeService service = new NoticeService();
-        List<Notice> list = service.getNoticeList();
+        List<NoticeView> list = service.getNoticeList(field, query, page);
         req.setAttribute("list", list);
 
-        int noticeCount = service.getNoticeCount();
+        int noticeCount = service.getNoticeCount(field, query);
         int totalPage = (noticeCount+9)/10;
         req.setAttribute("totalPage", totalPage);
         req.getRequestDispatcher("/WEB-INF/views/notice/list.jsp").forward(req,resp);

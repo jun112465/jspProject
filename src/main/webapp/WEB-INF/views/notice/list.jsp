@@ -1,6 +1,7 @@
-<%@ page import="com.example.JspWebProject.web.Notice" %>
+<%@ page import="com.example.JspWebProject.entity.Notice" %>
 <%@ page import="java.util.List" %>
-<%@ page import="com.example.JspWebProject.web.Page" %>
+<%@ page import="com.example.JspWebProject.entity.Page" %>
+<%@ page import="com.example.JspWebProject.entity.NoticeView" %>
 <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <!DOCTYPE html>
@@ -152,7 +153,7 @@
 						<label class="hidden">검색분류</label>
 						<select name="f">
 							<option  value="title">제목</option>
-							<option  value="writerId">작성자</option>
+							<option  value="author">작성자</option>
 						</select>
 						<label class="hidden">검색어</label>
 						<input type="text" name="q" value=""/>
@@ -163,7 +164,7 @@
 
 			<div class="notice margin-top">
 				<h3 class="hidden">공지사항 목록</h3>
-				<table class="table">
+				<table class="table" id="tableStart">
 					<thead>
 						<tr>
 							<th class="w60">번호</th>
@@ -176,14 +177,14 @@
 					<tbody>
 
 					<%
-						List<Notice> list = (List<Notice>) request.getAttribute("list");
+						List<NoticeView> list = (List<NoticeView>) request.getAttribute("list");
 						for(int i=0; i<list.size(); i++){
-							Notice n = list.get(i);
+							NoticeView n = list.get(i);
 							request.setAttribute("n", n);
 					%>
 						<tr>
 							<td>${n.id}</td>
-							<td class="title indent text-align-left"><a href="detail?id=<%=n.getId()%>"><%=n.getTitle()%></a></td>
+							<td class="title indent text-align-left"><a href="detail?id=<%=n.getId()%>"><%=n.getTitle()%> [${n.cmtCnt}]</a></td>
 							<td><%=n.getAuthor()%></td>
 							<td>
 									<%=n.getDate()%>
@@ -199,7 +200,7 @@
 
 			<div class="indexer margin-top align-right">
 				<h3 class="hidden">현재 페이지</h3>
-				<div><span class="text-orange text-strong"></span> / ${totalPage} pages</div>
+				<div><span class="text-orange text-strong"></span> ${curPage} / ${totalPage} pages</div>
 			</div>
 			<div class="margin-top align-center pager">
 
@@ -211,7 +212,13 @@
 	</div>
 	<ul class="-list- center">
 
-		<li><a class="-text- orange bold" href="?p=&t=&q=" ></a></li>
+		<%
+			int totalPage = (int) request.getAttribute("totalPage");
+			for(int i=0; i<totalPage; i++) {
+				pageContext.setAttribute("p", i+1);
+		%>
+				<li><a class="-text- orange bold" href="?p=${p}&t=&q=">${p}</a></li>
+		<% } %>
 	</ul>
 	<div>
 

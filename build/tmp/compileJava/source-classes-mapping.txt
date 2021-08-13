@@ -1,12 +1,14 @@
+com/example/JspWebProject/HelloServlet.java
+ com.example.JspWebProject.HelloServlet
+com/example/JspWebProject/entity/Notice.java
+ com.example.JspWebProject.entity.Notice
+com/example/JspWebProject/entity/Page.java
+ com.example.JspWebProject.entity.Page
+com/example/JspWebProject/controller/NoticeDetailController.java
+ com.example.JspWebProject.controller.NoticeDetailController
 com/example/JspWebProject/controller/NoticeListController.java
  com.example.JspWebProject.controller.NoticeListController
 com/example/JspWebProject/service/NoticeService.java
  com.example.JspWebProject.service.NoticeService
-com/example/JspWebProject/HelloServlet.java
- com.example.JspWebProject.HelloServlet
-com/example/JspWebProject/web/Page.java
- com.example.JspWebProject.web.Page
-com/example/JspWebProject/web/Notice.java
- com.example.JspWebProject.web.Notice
-com/example/JspWebProject/controller/NoticeDetailController.java
- com.example.JspWebProject.controller.NoticeDetailController
+com/example/JspWebProject/entity/NoticeView.java
+ com.example.JspWebProject.entity.NoticeView
