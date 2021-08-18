@@ -1,14 +1,20 @@
-com/example/JspWebProject/HelloServlet.java
- com.example.JspWebProject.HelloServlet
-com/example/JspWebProject/entity/Notice.java
- com.example.JspWebProject.entity.Notice
+com/example/JspWebProject/controller/index/Index.java
+ com.example.JspWebProject.controller.index.Index
+com/example/JspWebProject/controller/admin/Index.java
+ com.example.JspWebProject.controller.admin.Index
 com/example/JspWebProject/entity/Page.java
  com.example.JspWebProject.entity.Page
-com/example/JspWebProject/controller/NoticeDetailController.java
- com.example.JspWebProject.controller.NoticeDetailController
-com/example/JspWebProject/controller/NoticeListController.java
- com.example.JspWebProject.controller.NoticeListController
+com/example/JspWebProject/controller/notice/ListController.java
+ com.example.JspWebProject.controller.notice.ListController
+com/example/JspWebProject/controller/admin/notice/ListController.java
+ com.example.JspWebProject.controller.admin.notice.ListController
+com/example/JspWebProject/controller/notice/DetailController.java
+ com.example.JspWebProject.controller.notice.DetailController
 com/example/JspWebProject/service/NoticeService.java
  com.example.JspWebProject.service.NoticeService
+com/example/JspWebProject/entity/Notice.java
+ com.example.JspWebProject.entity.Notice
 com/example/JspWebProject/entity/NoticeView.java
  com.example.JspWebProject.entity.NoticeView
+com/example/JspWebProject/controller/admin/register/RegController.java
+ com.example.JspWebProject.controller.admin.register.RegController

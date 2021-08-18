@@ -11,6 +11,26 @@ import static java.sql.DriverManager.*;
 
 public class NoticeService {
 
+    public Connection setDatabase(){
+        Connection con = null;
+        //db 세팅
+        String server = "localhost"; // MySQL 서버 주소
+        String database = "JdbcTutorial"; // MySQL DATABASE 이름
+        String user_name = "root"; //  MySQL 서버 아이디
+        String password = "1q2w3e4r!"; // MySQL 서버 비밀번호
+
+        try {
+            Class.forName("com.mysql.jdbc.Driver");
+            con = getConnection("jdbc:mysql://" + server + "/" + database + "?useSSL=false", user_name, password);
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+        }
+
+        return con;
+    }
+
     public List<NoticeView> getNoticeList(){
         return getNoticeList(null, null, 1);
     }
@@ -198,4 +218,64 @@ public class NoticeService {
     public Notice getPrevNotice(int id){
         return null;
     }
+
+    //공지글 삭제
+    public int deleteNotice(int id) {
+        String sql = "Delete from JdbcTutorial.Notice where id = ?";
+        Connection con = null;
+        PreparedStatement st = null;
+        int rs ;
+        con = setDatabase();
+        try {
+            st = con.prepareStatement(sql);
+            st.setString(1, String.valueOf(id));
+            rs = st.executeUpdate();
+            st.close();
+            con.close();
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+        }
+
+        return 1;
+    }
+    //선택된 공지글들 삭제
+    public int removeNoticeAll(String[] ids){
+
+        for(String id : ids){
+            int tmp = Integer.parseInt(id);
+            deleteNotice(tmp);
+        }
+        return 1;
+    }
+    //선택된 공지글 공개로 전환
+    public int pubNoticeAll(int[] ids){
+        return 1;
+    }
+    //공지글 작성
+    public int insertNotice(Notice notice){
+
+        String sql = "insert into JdbcTutorial.Notice(title, author, description) values(?,?,?)";
+
+
+        Connection con = setDatabase();
+        PreparedStatement st = null;
+        try {
+            st = con.prepareStatement(sql);
+            st.setString(1, notice.getTitle());
+            st.setString(2, notice.getAuthor());
+            st.setString(3, notice.getDescription());
+            st.executeUpdate();
+
+            st.close();
+            con.close();
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+        }
+
+        return 1;
+    }
+    //공지글 수정
+    public int updateNotice(Notice notice){return 1;}
+    //index페이지에 공지글 5개 미리보기
+    public List<Notice> getNoticeNewestList(){return null;}
 }
