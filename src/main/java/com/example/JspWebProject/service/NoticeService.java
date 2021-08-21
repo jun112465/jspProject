@@ -275,7 +275,33 @@ public class NoticeService {
         return 1;
     }
     //공지글 수정
-    public int updateNotice(Notice notice){return 1;}
+    public int updateNotice(Notice notice){
+
+        int id = notice.getId();
+        String title = notice.getTitle();
+        String description = notice.getDescription();
+
+        String sql = "update JdbcTutorial.Notice\n" +
+                "set title=?, description=?\n" +
+                "where id = ?;\n";
+
+        Connection con = setDatabase();
+        try {
+            PreparedStatement st = con.prepareStatement(sql);
+            st.setString(1, title);
+            st.setString(2, description);
+            st.setInt(3, id);
+            st.executeUpdate();
+
+            st.close();
+            con.close();
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+        }
+
+
+        return notice.getId();
+    }
     //index페이지에 공지글 5개 미리보기
     public List<Notice> getNoticeNewestList(){return null;}
 }
