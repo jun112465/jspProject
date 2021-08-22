@@ -14,6 +14,7 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.Collection;
 import java.util.Date;
 import java.util.Optional;
 
@@ -38,30 +39,44 @@ public class RegController extends HttpServlet {
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         Optional<String> title = Optional.ofNullable(req.getParameter("title"));
         Optional<String> content = Optional.ofNullable(req.getParameter("content"));
-        Part filePart = req.getPart("file");
 
-        String realPath = req.getServletContext().getRealPath("/upload");
-        String fileName = filePart.getSubmittedFileName();
+        StringBuilder builder = new StringBuilder();
+        Collection<Part> fileParts = req.getParts();
+        for(Part p : fileParts) {
+            if(!p.getName().equals("file")) continue;
+            if(p.getSubmittedFileName() == "") continue;
+            Part filePart = p;
 
-        String filePath = realPath+File.separator+fileName;
+            String fileName = filePart.getSubmittedFileName();
+            String realPath = req.getServletContext().getRealPath("/upload");
+            String filePath = realPath + File.separator + fileName;
 
-        System.out.println(realPath);
-        System.out.println(fileName);
-        System.out.println(filePath);
+            //추가하는 파일들의 이름 - 스트링화
+            builder.append(fileName);
+            builder.append(",");
 
-        InputStream fis = filePart.getInputStream();
-        FileOutputStream fos = new FileOutputStream(filePath);
 
-        byte[] buf = new byte[1024];
-        int size = 0;
-        while((size=fis.read(buf)) != -1){
-            fos.write(buf,0,size);
+            InputStream fis = filePart.getInputStream();
+            FileOutputStream fos = new FileOutputStream(filePath);
+
+            byte[] buf = new byte[1024];
+            int size = 0;
+            while ((size = fis.read(buf)) != -1) {
+                fos.write(buf, 0, size);
+            }
+            fos.close();
+            fis.close();
         }
-        fos.close();
-        fis.close();
+//        마지막 쉬표 빼주기
+        if(builder.length() != 0)
+            builder.delete(builder.length()-1, builder.length());
 
         //공지글 생성 후 등록
-        Notice notice = new Notice(1, title.get(), "admin", 1, new Date(), content.get());
+        Notice notice = new Notice();
+        notice.setTitle(title.get());
+        notice.setAuthor("admin");
+        notice.setDescription(content.get());
+        notice.setFiles(builder.toString());
 
         NoticeService service = new NoticeService();
         service.insertNotice(notice);

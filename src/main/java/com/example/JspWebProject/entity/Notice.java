@@ -9,13 +9,56 @@ public class Notice {
     private int views;
     private Date date;
     private String description;
+    private String files;
 
+    public String[] getFileList() {
+        return fileList;
+    }
+
+    public String[] fileList;
+
+    public Notice(){
+
+    }
     public Notice(int id, String title, String author, int views, Date date, String description) {
         this.id = id;
         this.title = title;
         this.author = author;
         this.views = views;
         this.date = date;
+        this.description = description;
+    }
+    public String getFiles() {
+        return files;
+    }
+
+    public void setFiles(String files) {
+        this.files = files;
+        if(this.files != null)
+            setFileList();
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
+    }
+
+    public void setAuthor(String author) {
+        this.author = author;
+    }
+
+    public void setViews(int views) {
+        this.views = views;
+    }
+
+    public void setDate(Date date) {
+        this.date = date;
+    }
+
+    public void setDescription(String description) {
         this.description = description;
     }
 
@@ -40,6 +83,15 @@ public class Notice {
     }
 
     public String getDescription() {return description;}
+
+    public void setFileList() {
+        int i=0;
+        this.fileList = new String[2];
+        for(String tmp : files.split(",")){
+            this.fileList[i] = tmp;
+            i++;
+        }
+    }
 
     @Override
     public String toString() {

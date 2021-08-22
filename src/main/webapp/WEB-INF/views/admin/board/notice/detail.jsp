@@ -1,4 +1,5 @@
-<%--
+<%@ page import="com.example.JspWebProject.entity.Notice" %>
+<%@ page import="java.util.List" %><%--
   Created by IntelliJ IDEA.
   User: junjun
   Date: 2021/08/19
@@ -132,7 +133,7 @@
             <nav class="menu text-menu">
                 <h1>알림관리</h1>
                 <ul>
-                    <li><a href="/WEB-INF/views/admin/board/notice/list.html">공지사항</a></li>
+                    <li><a href="list">공지사항</a></li>
                 </ul>
             </nav>
 
@@ -174,7 +175,11 @@
                     </tr>
                     <tr>
                         <th>첨부파일</th>
-                        <td colspan="3"></td>
+                        <td colspan="3"><a download href="${pageContext.request.contextPath}/upload/${n.fileList[0]}">${n.fileList[0]}</a></td>
+                    </tr>
+                    <tr>
+                        <th>첨부파일</th>
+                        <td colspan="3"><a download href="${pageContext.request.contextPath}/upload/${n.fileList[0]}">${n.fileList[1]}</a></td>
                     </tr>
                     <tr class="content">
                         <td colspan = "4">

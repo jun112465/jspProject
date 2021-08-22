@@ -163,8 +163,10 @@ public class NoticeService {
                 int views = Integer.parseInt(rs.getString("views"));
                 Date date = rs.getDate("date");
                 String description = rs.getString("description");
+                String fileNames = rs.getString("files");
 
                 notice = new Notice(nid, title, author, views, date, description);
+                notice.setFiles(fileNames);
             }
             rs.close();
             st.close();
@@ -254,7 +256,7 @@ public class NoticeService {
     //공지글 작성
     public int insertNotice(Notice notice){
 
-        String sql = "insert into JdbcTutorial.Notice(title, author, description) values(?,?,?)";
+        String sql = "insert into JdbcTutorial.Notice(title, author, description, files) values(?,?,?,?)";
 
 
         Connection con = setDatabase();
@@ -264,6 +266,7 @@ public class NoticeService {
             st.setString(1, notice.getTitle());
             st.setString(2, notice.getAuthor());
             st.setString(3, notice.getDescription());
+            st.setString(4, notice.getFiles());
             st.executeUpdate();
 
             st.close();
